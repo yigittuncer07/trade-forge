@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeForge - Sign Up</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="container">
+                <h1>TradeForge</h1>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/signin.html">Sign In</a></li>
+                    <li><a href="/signup.html">Sign Up</a></li>
+                    <li><a href="/about.html">About</a></li>
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2>Sign Up</h2>
+        <form action="/signup" method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="/signin.html">Sign In</a></p>
+    </div>
+</body>
+</html>
