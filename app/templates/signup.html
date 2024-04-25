@@ -23,6 +23,14 @@
         </nav>
     </header>
 
+    {% with messages = get_flashed_messages()%}
+    {% if messages%}
+    {% for message in messages%}
+    <p style="text-align: center;">{{message}}</p>
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
     <div class="container">
         <h2>Sign Up</h2>
         <form action="/signup" method="post">
@@ -40,7 +48,9 @@
             </div>
             <button type="submit" class="btn">Sign Up</button>
         </form>
-        <p>Already have an account? <a href="/signin.html">Sign In</a></p>
+        <p>Already have an account? <a href="/signin">Sign In</a></p>
     </div>
+
+
 </body>
 </html>
