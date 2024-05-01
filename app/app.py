@@ -3,7 +3,6 @@ from flask_mysqldb import MySQL
 import hashlib
 import random
 import string
-import json
 import requests
 
 cryptocurrency_ids = [328, 1, 1027]
@@ -37,13 +36,49 @@ app.secret_key = "123456"
 
 
 @app.route('/')
-def main():
+def main_page():
     return render_template('index.html')
 
+@app.route('/main')
+def main():
+    return render_template('main.html')
+
+@app.route('/wallet')
+def wallet():
+    print(session_user_id)
+    cur = mysql.connection.cursor()
+    cur.execute(" SELECT * FROM assets WHERE UserId = %s;", (session_user_id,))
+    wallet = cur.fetchall()
+    cur.close()
+   
+    return render_template('wallet.html', wallet = wallet)
+
+@app.route('/logout')
+def logout():
+    update_session_user_id(-1)
+    return redirect('/index')
 
 @app.route('/index')
 def index():
     return render_template('index.html')
+
+
+
+@app.route('/market')
+def market():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Cryptos")
+    cryptos = cur.fetchall()
+    cur.close()
+
+    # Make a GET request to the endpoint
+    response = requests.get(url, headers=headers, params=params)
+
+    data = response.json()
+
+
+    return render_template('market.html', cryptos=cryptos, data=data)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -105,18 +140,9 @@ def signin():
                 # Store user information in session
                 session['user_id'] = user['Id']
                 session['username'] = user['UserName']
-                cur = mysql.connection.cursor()
-                cur.execute("SELECT * FROM Cryptos")
-                cryptos = cur.fetchall()
-                cur.close()
+                update_session_user_id(user['Id'])
 
-                # Make a GET request to the endpoint
-                response = requests.get(url, headers=headers, params=params)
-
-                data = response.json()
-
-
-                return render_template('main.html', cryptos=cryptos, data=data)
+                return redirect("/main")
             else:
                 error = "Incorrect password. Please try again."
                 flash("WRONG PASSWORD OR USER NAME!!!")
@@ -163,6 +189,10 @@ def is_email_available(email):
     result = cursor.fetchone()
     cursor.close()
     return result['count'] == 0
+
+def update_session_user_id(new_user_id):
+    global session_user_id
+    session_user_id = new_user_id
 
 if __name__ == "__main__":
     app.run(debug=True)

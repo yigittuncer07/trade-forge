@@ -34,13 +34,34 @@
                     <li><a href="/main">Home</a></li>
                     <li><a href="/market">Market</a></li>
                     <li><a href="/wallet">Wallet</a></li>
+
                     <li style="margin-left: 100%;"><a href="/logout">Logout</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <p style="margin: 50px; font-size: xx-large; font-weight: bold;">Main Page: </p>  
+    <p style="margin: 50px; font-size: xx-large; font-weight: bold;">Your Crypto Assets: </p>  
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Total Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asset in wallet %}
+            <tr>
+                <td>{{ asset.CryptoId }}</td>
+                <td>{{ asset.Amount }}</td>
+                <td>{{ NULL  }}  $</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <footer>
         <div class="container">
