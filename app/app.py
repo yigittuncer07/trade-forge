@@ -3,8 +3,26 @@ from flask_mysqldb import MySQL
 import hashlib
 import random
 import string
+import json
+import requests
 
- 
+cryptocurrency_ids = [328, 1, 1027]
+API_KEY = '6db83039-54e6-48c2-986d-681f46586926'
+url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+
+params = {
+    'id': ','.join(map(str, cryptocurrency_ids)),
+    'convert': 'USD'  # Convert prices to USD
+}
+
+# Headers with API key
+headers = {
+    'X-CMC_PRO_API_KEY': API_KEY
+}
+
+# Send GET request to the API
+response = requests.get(url, params=params, headers=headers)
+
 app = Flask(__name__, static_url_path='/static')
 
 
@@ -87,7 +105,18 @@ def signin():
                 # Store user information in session
                 session['user_id'] = user['Id']
                 session['username'] = user['UserName']
-                return render_template('main.html')
+                cur = mysql.connection.cursor()
+                cur.execute("SELECT * FROM Cryptos")
+                cryptos = cur.fetchall()
+                cur.close()
+
+                # Make a GET request to the endpoint
+                response = requests.get(url, headers=headers, params=params)
+
+                data = response.json()
+
+
+                return render_template('main.html', cryptos=cryptos, data=data)
             else:
                 error = "Incorrect password. Please try again."
                 flash("WRONG PASSWORD OR USER NAME!!!")

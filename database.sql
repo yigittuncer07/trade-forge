@@ -10,10 +10,13 @@ CREATE TABLE IF NOT EXISTS Users (
     SocialId VARCHAR(20)
 );
 
- 
-CREATE TABLE cryptos (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(255)
-);
+use tradeforge;
 
-INSERT INTO cryptos (Name) VALUES ('Bitcoin'), ('Ethereum'), ('Monero');
+CREATE TABLE cryptos (
+    Id INT,
+    Name VARCHAR(255),
+    Code VARCHAR(255)
+);
+INSERT INTO cryptos (Id, Name, Code) VALUES (1, 'Bitcoin', 'BTC');
+INSERT INTO cryptos (Id, Name, Code) VALUES (1027, 'Ethereum', 'ETH');
+INSERT INTO cryptos (Id, Name, Code) VALUES (328, 'Monero', 'XMR');
