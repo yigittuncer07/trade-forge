@@ -40,6 +40,13 @@ def signup():
         if not is_username_available(username):
             flash("Username is already taken. Please choose another one.", "error")
             return render_template('signup.html')
+        
+
+        # Check if email is available
+        if not is_email_available(email):
+            flash("Email is already registered. Please use another one.", "error")
+            return render_template('signup.html')
+
 
         hashPassword =  hashlib.md5(password.encode()).hexdigest()
 
@@ -116,6 +123,14 @@ def is_username_available(username):
     """Check if the username is available (not already used)."""
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT COUNT(*) AS count FROM Users WHERE UserName = %s", (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    return result['count'] == 0
+
+def is_email_available(email):
+    """Check if the email is available (not already used)."""
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT COUNT(*) AS count FROM Users WHERE Email = %s", (email,))
     result = cursor.fetchone()
     cursor.close()
     return result['count'] == 0
