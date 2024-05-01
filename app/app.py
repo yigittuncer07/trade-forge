@@ -4,6 +4,7 @@ import hashlib
 import random
 import string
 import requests
+from decimal import Decimal
 
 cryptocurrency_ids = [328, 1, 1027]
 API_KEY = '6db83039-54e6-48c2-986d-681f46586926'
@@ -23,7 +24,7 @@ headers = {
 response = requests.get(url, params=params, headers=headers)
 
 app = Flask(__name__, static_url_path='/static')
-
+global session_user_id
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -34,6 +35,9 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'  # Return query results as dictio
 mysql = MySQL(app)
 app.secret_key = "123456"
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
 
 @app.route('/')
 def main_page():
@@ -45,13 +49,19 @@ def main():
 
 @app.route('/wallet')
 def wallet():
-    print(session_user_id)
     cur = mysql.connection.cursor()
-    cur.execute(" SELECT * FROM assets WHERE UserId = %s;", (session_user_id,))
+    print(session_user_id)
+    cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
     wallet = cur.fetchall()
     cur.close()
-   
-    return render_template('wallet.html', wallet = wallet)
+    # Make a GET request to the endpoint 
+    response = requests.get(url, headers=headers, params=params)
+
+    data = response.json()
+
+    total_wallet_value = calculate_total_wallet_value(wallet,data)
+
+    return render_template('wallet.html', wallet = wallet, data = data, total_wallet_value = total_wallet_value)
 
 @app.route('/logout')
 def logout():
@@ -193,6 +203,19 @@ def is_email_available(email):
 def update_session_user_id(new_user_id):
     global session_user_id
     session_user_id = new_user_id
+
+def calculate_total_wallet_value(wallet_data, crypto_data):
+    total_value = Decimal('0')
+    
+    for asset in wallet_data:
+        crypto_id = str(asset['CryptoId'])
+        amount = asset['Amount']
+        
+        if crypto_id in crypto_data['data']:
+            price = crypto_data['data'][crypto_id]['quote']['USD']['price']
+            total_value += Decimal(amount) * Decimal(price)
+    
+    return total_value
 
 if __name__ == "__main__":
     app.run(debug=True)

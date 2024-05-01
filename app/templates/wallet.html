@@ -44,6 +44,8 @@
     <p style="margin: 50px; font-size: xx-large; font-weight: bold;">Your Crypto Assets: </p>  
 
 
+
+
     <table>
         <thead>
             <tr>
@@ -55,13 +57,16 @@
         <tbody>
             {% for asset in wallet %}
             <tr>
-                <td>{{ asset.CryptoId }}</td>
-                <td>{{ asset.Amount }}</td>
-                <td>{{ NULL  }}  $</td>
+                <td>{{ asset.Name }}</td>
+                <td>{{ asset.Amount | round(4) }}</td>
+                <td>{{ ((asset.Amount | float) * (data['data'][asset.CryptoId|string]['quote']['USD']['price'] | float)) | round(4) }} $</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <p style="margin-top: 50px; margin-left: 70%; font-size: x-large; font-weight: bold;">Total Wallet Value: {{ total_wallet_value | round(4) }} $ </p>  
+
 
     <footer>
         <div class="container">

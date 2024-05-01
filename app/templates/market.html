@@ -56,7 +56,7 @@
             <tr>
                 <td>{{ crypto.Id }}</td>
                 <td>{{ crypto.Name }}</td>
-                <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price'] }}  $</td>
+                <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price']  | round(4) }}  $</td>
             </tr>
             {% endfor %}
         </tbody>
