@@ -37,6 +37,10 @@ def signup():
         email = request.form['email']
         socialid = generate_social_id()
 
+        if not is_username_available(username):
+            flash("Username is already taken. Please choose another one.", "error")
+            return render_template('signup.html')
+
         hashPassword =  hashlib.md5(password.encode()).hexdigest()
 
         cursor = mysql.connection.cursor()
@@ -48,13 +52,11 @@ def signup():
 
         # Close connection
         cursor.close()
-        error = "Incorrect password. Please try again."
         flash("SIGNED UP SUCCESSFULLY!!!")
-
         # NEED USERNAME CHECK 
 
         
-    return render_template('signup.html', error=error)
+    return render_template('signup.html')
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -109,6 +111,14 @@ def generate_social_id(length=10):
 
     return random_string
 
+
+def is_username_available(username):
+    """Check if the username is available (not already used)."""
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT COUNT(*) AS count FROM Users WHERE UserName = %s", (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    return result['count'] == 0
 
 if __name__ == "__main__":
     app.run(debug=True)
