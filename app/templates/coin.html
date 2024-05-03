@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeForge - Cryptocurrency Exchange</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <script src="static/js/scipt.js"></script>
+    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Center the charts */
+        .btcwdgt-chart {
+            margin: 0 auto;
+            display: block;
+            max-width: 800px; /* Adjust the max-width as needed */
+        }
+
+        /* Display widgets side by side */
+        .widget-container {
+            display: inline-block;
+            margin-right: 10px; /* Adjust spacing between widgets */
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="container">
+            <h1>TradeForge</h1>
+            <ul>
+                <li><a href="/main">Home</a></li>
+                <li><a href="/market">Market</a></li>
+                <li><a href="/wallet">Wallet</a></li>
+                <li style="position: absolute; right: 10px;"><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="widget-container">
+    <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
+    <div class="livecoinwatch-widget-1" lcw-coin="BTC" lcw-base="USD" lcw-secondary="BTC" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#ff6900" lcw-color-bg="#1f2434" lcw-border-w="2" lcw-digits="9"></div>
+</div>
+
+<div class="widget-container">
+    <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
+    <div class="livecoinwatch-widget-1" lcw-coin="ETH" lcw-base="USD" lcw-secondary="BTC" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#ff6900" lcw-color-bg="#1f2434" lcw-border-w="2" lcw-digits="9"></div>
+</div>
+
+<div class="widget-container">
+    <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
+    <div class="livecoinwatch-widget-1" lcw-coin="XMR" lcw-base="USD" lcw-secondary="BTC" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#ff6900" lcw-color-bg="#1f2434" lcw-border-w="2" lcw-digits="9"></div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2024 TradeForge. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -21,52 +21,77 @@
         th {
             background-color: #f2f2f2;
         }
+        .content {
+            display: none;
+            padding: 10px;
+        }
     </style>
 </head>
 
 <body>
 
-    <header>
-        <nav>
-            <div class="container">
-                <h1>TradeForge</h1>
-                <ul>
-                    <li><a href="/main">Home</a></li>
-                    <li><a href="/market">Market</a></li>
-                    <li><a href="/wallet">Wallet</a></li>
-                    
-                    <li style="position: absolute; right: 10px;"><a href="/logout">Logout</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <p style="margin: 50px; font-size: xx-large; font-weight: bold;">Dashboard: </p>
-
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for crypto in cryptos %}
-            <tr>
-                <td>{{ crypto.Id }}</td>
-                <td>{{ crypto.Name }}</td>
-                <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price']  | round(4) }}  $</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-  
-
-    <footer>
+<header>
+    <nav>
         <div class="container">
-            <p>&copy; 2024 TradeForge. All rights reserved.</p>
+            <h1>TradeForge</h1>
+            <ul>
+                <li><a href="/main">Home</a></li>
+                <li><a href="/market">Market</a></li>
+                <li><a href="/wallet">Wallet</a></li>
+                <li style="position: absolute; right: 10px;"><a href="/logout">Logout</a></li>
+            </ul>
         </div>
-    </footer>
+    </nav>
+</header>
+
+<p style="margin: 50px; font-size: xx-large; font-weight: bold;">Dashboard: </p>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for crypto in cryptos %}
+        <tr class="collapsible">
+            <td>{{ crypto.Id }}</td>
+            <td><a href="/coin">{{ crypto.Name }}</a></td>
+            <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price']  | round(4) }}  $</td>
+        </tr>
+        <tr class="content">
+            <td colspan="3">
+                <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
+                <div class="livecoinwatch-widget-1" lcw-coin="{{crypto.Code}}" lcw-base="USD" lcw-secondary="{{crypto.Code}}" lcw-period="d" lcw-color-tx="#ffffff" lcw-color-pr="#ff6900" lcw-color-bg="#1f2434" lcw-border-w="2" lcw-digits="9"></div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2024 TradeForge. All rights reserved.</p>
+    </div>
+</footer>
 </body>
 </html>

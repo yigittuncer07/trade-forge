@@ -47,6 +47,13 @@ def main_page():
 def main():
     return render_template('main.html')
 
+@app.route('/coin')
+def coin():
+  
+    return render_template('coin.html')
+
+
+
 @app.route('/wallet')
 def wallet():
     cur = mysql.connection.cursor()
