@@ -58,7 +58,7 @@
         {% for crypto in cryptos %}
         <tr class="collapsible">
             <td>{{ crypto.Id }}</td>
-            <td><a href="/coin">{{ crypto.Name }}</a></td>
+            <td>{{ crypto.Name }}</td>
             <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price']  | round(4) }}  $</td>
         </tr>
         <tr class="content">
