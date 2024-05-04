@@ -60,6 +60,8 @@
             <td>{{ crypto.Id }}</td>
             <td>{{ crypto.Name }}</td>
             <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price']  | round(4) }}  $</td>
+            <td><button onclick="event.stopPropagation();"><a href="/sellbuy{{crypto.Id}}">Buy/Sell</a></button></td>
+
         </tr>
         <tr class="content">
             <td colspan="3">

@@ -6,7 +6,7 @@ import string
 import requests
 from decimal import Decimal
 
-cryptocurrency_ids = [328, 1, 1027]
+cryptocurrency_ids = [328, 1, 1027,825]
 API_KEY = '6db83039-54e6-48c2-986d-681f46586926'
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
@@ -47,10 +47,21 @@ def main_page():
 def main():
     return render_template('main.html')
 
-@app.route('/coin')
-def coin():
+@app.route('/buy/<float:crypto_price>/<int:crypto_id>')
+def buy(crypto_price,crypto_id):
+    cur = mysql.connection.cursor()
+    print(session_user_id)
+    cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
+    wallet = cur.fetchall()
+    cur.close()
+
+    
+
+
+
+
   
-    return render_template('coin.html')
+    return render_template('main.html',crypto_id=crypto_id,crypto_price = crypto_price)
 
 
 
@@ -79,7 +90,31 @@ def logout():
 def index():
     return render_template('index.html')
 
+@app.route('/sellbuy<crypto_id>')
+def sellbuy(crypto_id):
 
+    response = requests.get(url, headers=headers, params=params)
+
+    data = response.json()
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Cryptos")
+    cryptos = cur.fetchall()
+    cur.close()
+    
+    crypto_name = ""
+
+    for crypto in cryptos:
+        if str(crypto['Id']) == str(crypto_id):
+            crypto_name = crypto['Name']
+            break  # Once the correct name is found, you can exit the loop
+
+    crypto_price = data['data']["%s" % (crypto_id,)]['quote']['USD']['price']
+
+    print(data)
+
+
+    return render_template('sellbuy.html', crypto_id = crypto_id, crypto_name = crypto_name, crypto_price = crypto_price)
 
 @app.route('/market')
 def market():
