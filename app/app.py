@@ -47,15 +47,38 @@ def main_page():
 def main():
     return render_template('main.html')
 
-@app.route('/buy/<float:crypto_price>/<int:crypto_id>')
+@app.route('/buy/<crypto_price>/<crypto_id>', methods=['GET', 'POST'])
 def buy(crypto_price,crypto_id):
     cur = mysql.connection.cursor()
-    print(session_user_id)
     cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
     wallet = cur.fetchall()
     cur.close()
 
+    tether_amount = 0
+
+    for crypto_data in wallet:
+        # Check if CryptoId is 825
+        if crypto_data['CryptoId'] == 825:
+            # Extract the amount
+            tether_amount = crypto_data['Amount']
+            break  # Stop iterating once found
+
+  
     
+    amount = request.form.get('buyamount')  # Retrieving amount from form data
+
+    if amount*crypto_price <= tether_amount:
+        tether_amount = tether_amount - amount*crypto_price
+        
+        cur = mysql.connection.cursor()
+        cur.execute("""UPDATE assets
+            SET Amount = %d
+            WHERE UserId = %s AND CryptoId = %s;
+            """())
+        wallet = cur.fetchall()
+        cur.close()
+    
+
 
 
 

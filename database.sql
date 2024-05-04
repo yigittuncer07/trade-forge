@@ -23,10 +23,10 @@ INSERT INTO cryptos (Id, Name, Code) VALUES (328, 'Monero', 'XMR');
 
 
 CREATE TABLE assets (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    UserId INT,
-    CryptoId INT,
+    UserId INT ,
+    CryptoId INT ,
     Amount DECIMAL(18, 8),
+	PRIMARY KEY (UserId, CryptoId),
     FOREIGN KEY (UserId) REFERENCES users(Id),
     FOREIGN KEY (CryptoId) REFERENCES cryptos(Id)
 );
@@ -35,3 +35,4 @@ CREATE TABLE assets (
 INSERT INTO assets (UserId, CryptoId, Amount) VALUES (22, 1, 12.5);
 INSERT INTO assets (UserId, CryptoId, Amount) VALUES (22, 1027, 50);
 INSERT INTO assets (UserId, CryptoId, Amount) VALUES (22, 328, 10);
+INSERT INTO assets (UserId, CryptoId, Amount) VALUES (22, 825, 1000000);
