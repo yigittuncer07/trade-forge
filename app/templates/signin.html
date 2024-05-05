@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <style>
+        body {
+            background-color: #FFFFFF; /* Set the background color */
+            
+        }
         header, footer {
             background-color: #40E0D0;
             color: white;
@@ -15,6 +19,37 @@
 
         h1 {
             margin-bottom: 20px;
+            padding: 0; 
+        }
+        h2 {
+            margin-top: 20px;
+            font-size: 40pt;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            text-align: center; /* Center-align the content */
+        }
+        .form-group label {
+            margin-top: 10px;
+            display: block;
+            margin-bottom: 10px; /* Add some spacing between labels */
+            width: 150px; /* Adjust the width as needed */
+        }
+
+        .form-group input {
+            width: 300px; /* Adjust the width of input fields */
+            padding: 10px; /* Add some padding for better appearance */
+            border: 1px solid #ccc; /* Optional: Add border for input fields */
+            border-radius: 5px; /* Optional: Add border-radius for input fields */
+        }
+
+        .btn {
+            margin-top: 20px; /* Add some margin to the button */
+            padding: 15px 30px; /* Increase padding */
+            font-size: 20px; /* Increase font size */
+            width: 300px;
+            margin-bottom: 20px;
+            
         }
     </style>
 </head>
@@ -23,7 +58,7 @@
     <header>
         <nav>
             <div class="container" style="margin-left: 0;">
-                <h1>TradeForge</h1>
+                <h1>TradeForge </h1>
                 <ul>
                     <li><a href="/index">Home</a></li>
                     <li><a href="/signin">Sign In</a></li>
@@ -35,16 +70,17 @@
         </nav>
     </header>
 
-    {% with messages = get_flashed_messages()%}
-    {% if messages%}
-    {% for message in messages%}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
     <p style="text-align: center;">{{message}}</p>
-    {%endfor%}
-    {%endif%}
-    {%endwith%}
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    
 
     <div class="container">
-        <h2>Sign In</h2>
+        <h2>    Log In</h2>
         <form action="/signin" method="post">
             <div class="form-group">
                 <label for="username">Username:</label>
@@ -54,9 +90,12 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn">Sign In</button>
+            <button type="submit" class="btn">Log In </button>
         </form>
+        <div class="form-container"> 
         <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+        </div>
     </div>
+
 </body>
 </html>
