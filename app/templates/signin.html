@@ -6,13 +6,23 @@
     <title>TradeForge - Sign In</title>
     <link rel="stylesheet" href="static/css/style.css">
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
+    <style>
+        header, footer {
+            background-color: #40E0D0;
+            color: white;
+            padding: 10px 0;
+        }
 
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <nav>
-            <div class="container">
+            <div class="container" style="margin-left: 0;">
                 <h1>TradeForge</h1>
                 <ul>
                     <li><a href="/index">Home</a></li>

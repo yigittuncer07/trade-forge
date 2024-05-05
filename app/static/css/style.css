@@ -6,10 +6,11 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     display: flex; 
     flex-direction: column; 
     min-height: 100vh; 
+
 }
 
 .container {
