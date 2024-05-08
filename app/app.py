@@ -6,7 +6,7 @@ import string
 import requests
 from decimal import Decimal
 
-cryptocurrency_ids = [328, 1, 1027,825]
+cryptocurrency_ids = [328, 1, 1027,825,994]
 API_KEY = '6db83039-54e6-48c2-986d-681f46586926'
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
