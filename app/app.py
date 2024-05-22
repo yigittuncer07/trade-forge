@@ -46,6 +46,10 @@ def main_page():
 @app.route('/main')
 def main():
     return render_template('main.html')
+    
+@app.route('/test')
+def test():
+    return render_template('test.html')
 
 @app.route('/buy/<crypto_price>/<crypto_id>', methods=['GET', 'POST'])
 def buy(crypto_price,crypto_id):

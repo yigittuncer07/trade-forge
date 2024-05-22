@@ -78,8 +78,31 @@
         </tr>
         <tr class="content">
             <td colspan="3">
-                <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
-                <div class="livecoinwatch-widget-1" lcw-coin="{{crypto.Code}}" lcw-base="USD" lcw-secondary="{{crypto.Code}}" lcw-period="d" lcw-color-tx="#000000" lcw-color-pr="#000000" lcw-color-bg="#40e0d0" lcw-border-w="2" ></div>
+                 <!-- TradingView Widget BEGIN -->
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright">
+            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
+            </a>
+        </div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {
+            "width": "700",
+            "height": "400",
+            "symbol": "{{ crypto.ChartCode }}",
+            "interval": "D",
+            "timezone": "Etc/UTC",
+            "theme": "dark",
+            "style": "1",
+            "locale": "en",
+            "allow_symbol_change": true,
+            "calendar": false,
+            "support_host": "https://www.tradingview.com"
+        }
+        </script>
+    </div>
+    <!-- TradingView Widget END -->    
+            
             </td>
         </tr>
         {% endfor %}
