@@ -5,30 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TradeForge - Cryptocurrency Exchange</title>
     <link rel="stylesheet" href="static/css/style.css">
-    <script src="static/js/scipt.js"></script>
+    <script src="static/js/script.js"></script>
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
         header, footer {
             background-color: #40E0D0;
             color: white;
-            padding: 10px 0;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        h1 {
-            margin-bottom: 20px;
+        header h1 {
+            margin: 0 0 10px 0; /* Remove top and bottom margins */
         }
-        table {
+
+        nav {
             width: 100%;
-            border-collapse: collapse;
-            margin-left: 100px;
         }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 20px; /* Spacing between nav items */
         }
-        th {
-            background-color: #f2f2f2;
+
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .user-count {
+            padding-left: 50px;
+            font-size: 84px;
+            line-height: 88px;
+            font-weight: bold;
+            white-space: nowrap;
+            padding-right: 50px; /* Adjusting padding for right side */
+        }
+
+        .user-count .number {
+            color: #40E0D0;
+        }
+
+        .news-box {
+            background-color: #F1EFEF; 
+            padding: 10px 20px; /* Padding for all sides */
+            border-radius: 15px; /* Increased border-radius for more rounded corners */
+            margin-left: 20px; /* Space between user count and news box */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 22px;
+            flex-grow: 1; /* Allowing news box to grow */
+        }
+
+        .news-box h3 {
+            font-size: 32px; /* Header font size */
+        }
+
+        .news-box ul {
+            padding-left: 20px; /* Padding for list */
+        }
+
+        .news-box li {
+            padding: 5px 0; /* Padding between list items */
+        }
+
+        .faq-section {
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .faq-item {
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            display: none;
+            padding-left: 20px; /* Padding for the answer text */
+            margin-top: 5px;
+            font-size: 20px; 
+        }
+
+        .faq-question {
+            padding-top: 10px;
+            cursor: pointer;
+            color: #40E0D0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-size: 32px; 
+            text-align: center;
+            padding-bottom: 10px;
+        }
+
+        .content-container {
+            display: flex;
+            align-items: center;
+            padding: 50px 20px; /* Padding for top and sides */
+            flex-wrap: wrap; /* Allow wrapping for small screens */
+        }
+
+        .content-container > div {
+            flex: 1; /* Make each child flex equally */
+            min-width: 300px; /* Minimum width for better responsiveness */
+        }
+
+        footer {
+            text-align: center;
         }
     </style>
 </head>
@@ -36,20 +136,83 @@
 <body>
 
     <header>
+        <h1>TradeForge</h1>
         <nav>
-            <div class="container" style="margin-left: 0;">
-                <h1>TradeForge</h1>
-                <ul>
-                    <li><a href="/main">Home</a></li>
-                    <li><a href="/market">Market</a></li>
-                    <li><a href="/wallet">Wallet</a></li>
-                    <li style="position: absolute; right: 10px;"><a href="/logout">Logout</a></li>
-                </ul>
-            </div>
+            <ul>
+                <li><a href="/main">Home</a></li>
+                <li><a href="/market">Market</a></li>
+                <li><a href="/wallet">Wallet</a></li>
+                <li style="margin-left: auto;"><a href="/logout">Logout</a></li>
+            </ul>
         </nav>
     </header>
-    <p style="margin: 50px; font-size: xx-large; font-weight: bold;">Main Page: </p>  
-    <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script> <div class="livecoinwatch-widget-5" lcw-base="USD" lcw-color-tx="#7bdcb5" lcw-marquee-1="coins" lcw-marquee-2="coins" lcw-marquee-items="30" ></div>
+
+    <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script> 
+    <div class="livecoinwatch-widget-5" lcw-base="USD" lcw-color-tx="#7bdcb5" lcw-marquee-1="coins" lcw-marquee-2="coins" lcw-marquee-items="30"></div>
+
+    <div class="content-container">
+        <div class="user-count" id="userCount">
+            <div class="number">113</div>
+            <div>USERS</div>
+            <div>TRUST US</div>
+        </div>
+
+        <div class="news-box">
+            <h3>News</h3>
+            <ul>
+                <li>Massive Token Unlocking Expected Next Week, Totaling Around $380 Million</li>
+                <li>PEPE Experiences a Significant Increase in Value</li>
+                <li>Bitcoin(BTC) Drops Below 69,000 USDT with 0.42% Decrease in 24 Hours</li>
+                <li>The Value Of 10,000 Bitcoins Today: From Pizza Boxes To Private Jets</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let userCount = 113;
+        setInterval(() => {
+            let increment = Math.floor(Math.random() * 2) + 1;
+            userCount += increment;
+            document.getElementById('userCount').children[0].innerText = userCount;
+        }, 20000);
+    </script>
+
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <div class="faq-question">1. What is TradeForge?</div>
+            <div class="faq-answer">TradeForge is a cryptocurrency exchange platform that allows you to trade various digital currencies.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">2. How do I create an account?</div>
+            <div class="faq-answer">You can create an account by clicking on the "Sign Up" button on the homepage and following the instructions.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">3. Is my data secure?</div>
+            <div class="faq-answer">Yes, we use advanced security measures to protect your data and ensure your transactions are safe.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">4. What cryptocurrencies are supported?</div>
+            <div class="faq-answer">We support a wide range of cryptocurrencies including Bitcoin, Ethereum, Monero, and many more.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">5. How do I contact customer support?</div>
+            <div class="faq-answer">You can contact our customer support team via email at support@tradeforge.com.</div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                if (answer.style.display === 'none' || !answer.style.display) {
+                    answer.style.display = 'block';
+                } else {
+                    answer.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
     <footer>
         <div class="container">
