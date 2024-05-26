@@ -6,6 +6,7 @@ import string
 import requests
 from decimal import Decimal
 
+
 cryptocurrency_ids = [328, 1, 1027,825,994]
 API_KEY = '6db83039-54e6-48c2-986d-681f46586926'
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
@@ -24,7 +25,7 @@ headers = {
 response = requests.get(url, params=params, headers=headers)
 
 app = Flask(__name__, static_url_path='/static')
-global session_user_id
+session_user_id = 0
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -51,14 +52,16 @@ def main():
 def test():
     return render_template('test.html')
 
-@app.route('/buy/<crypto_price>/<crypto_id>', methods=['GET', 'POST'])
-def buy(crypto_price,crypto_id):
+@app.route('/buy/<crypto_id>', methods=['GET', 'POST'])
+def buy(crypto_id):
     cur = mysql.connection.cursor()
     cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
     wallet = cur.fetchall()
     cur.close()
 
     tether_amount = 0
+    is_new_crypto = True
+
 
     for crypto_data in wallet:
         # Check if CryptoId is 825
@@ -67,19 +70,43 @@ def buy(crypto_price,crypto_id):
             tether_amount = crypto_data['Amount']
             break  # Stop iterating once found
 
+    for crypto_data in wallet:
+        if int(crypto_data['CryptoId']) == int(crypto_id):
+            print('HASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN')
+            is_new_crypto = False
+            break  # Stop iterating once found
+
   
     
-    amount = request.form.get('buyamount')  # Retrieving amount from form data
+    amount = float(request.form.get('buyamount')) # Retrieving amount from form data
+
+    tether_amount = float(tether_amount)
+
+    response = requests.get(url, headers=headers, params=params)
+
+    data = response.json()
+
+    crypto_data = data['data'][str(crypto_id)]
+    crypto_price = float(crypto_data['quote']['USD']['price'])
+
+
 
     if amount*crypto_price <= tether_amount:
         tether_amount = tether_amount - amount*crypto_price
+
         
         cur = mysql.connection.cursor()
-        cur.execute("""UPDATE assets
-            SET Amount = %d
-            WHERE UserId = %s AND CryptoId = %s;
-            """())
-        wallet = cur.fetchall()
+        cur.execute("UPDATE assets SET Amount = %s WHERE UserId = %s AND CryptoId = %s", (tether_amount, session_user_id, 825))
+
+        if is_new_crypto:
+            cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (session_user_id, crypto_id, amount))
+        else:
+            cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
+            
+
+
+        
+        mysql.connection.commit()
         cur.close()
     
 
@@ -95,7 +122,6 @@ def buy(crypto_price,crypto_id):
 @app.route('/wallet')
 def wallet():
     cur = mysql.connection.cursor()
-    print(session_user_id)
     cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
     wallet = cur.fetchall()
     cur.close()
@@ -138,7 +164,6 @@ def sellbuy(crypto_id):
 
     crypto_price = data['data']["%s" % (crypto_id,)]['quote']['USD']['price']
 
-    print(data)
 
 
     return render_template('sellbuy.html', crypto_id = crypto_id, crypto_name = crypto_name, crypto_price = crypto_price)

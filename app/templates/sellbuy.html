@@ -70,7 +70,7 @@
     <div id="buy" class="tab-content">
         <h2>Buy Cryptocurrency</h2>
         <br>
-        <form action="/buy/{{crypto_price}}/{{crypto_id}}" method="post">
+        <form action="/buy/{{crypto_id}}" method="post">
             <label for="buy-amount">Amount:</label>
             <input type="number" id="buy-amount" name="buyamount" placeholder="Amount to buy" step="any" oninput="calculateTotal()">
             &nbsp&nbsp&nbsp
@@ -100,6 +100,15 @@
         </form>
     </div>
 </div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<p style="text-align: center;">{{message}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
 <script>
     function calculateTotal() {
         // Get the input amount and crypto price
