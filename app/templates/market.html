@@ -22,7 +22,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-left: 50px;
+            margin-left: 0px;
         }
         th, td {
             padding: 8px;
@@ -34,6 +34,9 @@
         }
         .content {
             display: none;
+        }
+        .tradingview-widget-container {
+            width: 100%;
         }
 
     </style>
@@ -55,7 +58,7 @@
     </nav>
 </header>
 
-<p style="margin: 50px; font-size: xx-large; font-weight: bold;">Dashboard: </p>
+
 
 <table>
     <thead>
@@ -63,8 +66,8 @@
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
-            <th> </th>
-            <th> </th>
+            <th> </th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -77,7 +80,7 @@
             <td> <b> ▼</b> </td>
         </tr>
         <tr class="content">
-            <td colspan="3">
+            <td colspan="5">
                  <!-- TradingView Widget BEGIN -->
     <div class="tradingview-widget-container">
         <div class="tradingview-widget-container__widget"></div>
@@ -117,10 +120,10 @@
         coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
             var content = this.nextElementSibling;
-            if (content.style.display === "block") {
+            if (content.style.display === "table-row") {
                 content.style.display = "none";
             } else {
-                content.style.display = "block";
+                content.style.display = "table-row";
             }
         });
     }
