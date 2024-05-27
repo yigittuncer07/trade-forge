@@ -31,7 +31,8 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0;
+            /* Remove margin-left */
+            margin: 0px 0;
         }
 
         th, td {
@@ -53,11 +54,6 @@
             display: inline;
             margin-right: 20px;
         }
-
-        .container {
-            position: relative;
-        }
-
         .livecoinwatch-widget-5 {
             position: absolute;
             bottom: 20px;
@@ -68,7 +64,7 @@
 <body>
     <header>
         <nav>
-            <div class="container">
+            <div class="container" style="margin-left: 0;">
                 <h1>TradeForge</h1>
                 <ul>
                     <li><a href="/main">Home</a></li>
@@ -100,6 +96,7 @@
     </table>
 
     <p style="margin-top: 50px; margin-left: 70%; font-size: x-large; font-weight: bold;">Total Balance: {{ total_wallet_value | round(4) }} $</p>
+
     <div class="livecoinwatch-widget-5" lcw-base="USD" lcw-color-tx="#7bdcb5" lcw-marquee-1="coins" lcw-marquee-2="coins" lcw-marquee-items="30"></div>
 
     <footer>
