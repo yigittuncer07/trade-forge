@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TradeForge - Cryptocurrency Exchange</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="static/js/scipt.js"></script>
+    <script src="static/js/script.js"></script>
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <style>
-
         header, footer {
             background-color: #40E0D0;
             color: white;
@@ -24,23 +23,37 @@
             margin: 0 auto;
             padding-top: 20px;
         }
+
         .tab {
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 15px 30px;
             margin: 0 5px;
             background-color: #eee;
             display: inline-block;
             border-radius: 5px;
+            font-size: 1.2em;
         }
+
         .tab.active {
             background-color: #007bff;
             color: white;
         }
+
         .tab-content {
             display: none;
             padding: 20px;
             border: 1px solid #ddd;
             border-top: none;
+            border-radius: 15px;
+            background-color: #F1EFEF;
+        }
+
+        .large-input {
+            width: 200px; /* Adjust the width as needed */
+            font-size: 1em; 
+            padding: 5px; 
+            border-radius: 4px;
+
         }
     </style>
 </head>
@@ -72,7 +85,7 @@
         <br>
         <form action="/buy/{{crypto_id}}" method="post">
             <label for="buy-amount">Amount:</label>
-            <input type="number" id="buy-amount" name="buyamount" placeholder="Amount to buy" step="any" oninput="calculateTotal()">
+            <input type="number" id="buy-amount" name="buyamount" placeholder="Amount to buy" step="any" oninput="calculateTotal()" class="large-input">
             &nbsp&nbsp&nbsp
             <label for="buy-currency">Currency Price:</label>
             <label><b>{{crypto_price  | round(4)}} $</b></label>
@@ -88,7 +101,7 @@
         <br>
         <form>
             <label for="sell-amount">Amount:</label>
-            <input type="number" id="sell-amount" name="sellamount" placeholder="Amount to sell" step="any" oninput="calculateTotal()">
+            <input type="number" id="sell-amount" name="sellamount" placeholder="Amount to sell" step="any" oninput="calculateTotal()" class="large-input">
             &nbsp&nbsp&nbsp
             <label for="sell-currency">Currency Price:</label>
             <label><b>{{crypto_price  | round(4)}} $</b></label>
@@ -111,16 +124,12 @@
 
 <script>
     function calculateTotal() {
-        // Get the input amount and crypto price
         var amount = parseFloat(document.getElementById('buy-amount').value);
         var cryptoPrice = parseFloat('{{crypto_price}}');
-
-        // Calculate the total price
         var totalPrice = amount * cryptoPrice;
-
-        // Update the total price label
         document.getElementById('total-price-label').textContent = totalPrice.toFixed(4) + ' $';
     }
+
     function showTab(tabName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tab-content");
@@ -134,7 +143,7 @@
         document.getElementById(tabName).style.display = "block";
         event.currentTarget.className += " active";
     }
-    // Initialize with one tab open
+
     document.getElementsByClassName('tab')[0].click();
 </script>
 <footer>
