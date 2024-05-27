@@ -72,7 +72,6 @@ def buy(crypto_id):
 
     for crypto_data in wallet:
         if int(crypto_data['CryptoId']) == int(crypto_id):
-            print('HASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN')
             is_new_crypto = False
             break  # Stop iterating once found
 
@@ -103,19 +102,24 @@ def buy(crypto_id):
         else:
             cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
             
-
-
-        
         mysql.connection.commit()
         cur.close()
+        error = "Successful."
+        flash("ACTION COMPLETED!", "success")
+        return redirect(url_for('sellbuy', crypto_id=crypto_id))
+    else:
+        error = "Error."
+        flash("ACTION NOT COMPLETED! YOU DON'T HAVE ENOUGH TETHER", "error")
+        return redirect(url_for('sellbuy', crypto_id=crypto_id))
+        
     
 
 
 
-
+                
 
   
-    return render_template('main.html',crypto_id=crypto_id,crypto_price = crypto_price)
+    
 
 
 
