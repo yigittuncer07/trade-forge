@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, session,flash
+from flask import Flask, flash, render_template, request, redirect, url_for,flash
 from flask_mysqldb import MySQL
 import hashlib
 import random
@@ -87,7 +87,7 @@ def send():
                 break  # Stop iterating once found
 
 
-        if (current_crypto_amount>amount):
+        if (current_crypto_amount>=amount):
             cur.execute("UPDATE assets SET Amount = Amount - %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
 
             cur.execute("SELECT Id FROM Users WHERE SocialId = %s", (social_id,))
@@ -364,6 +364,19 @@ def signup():
         
         mysql.connection.commit()
 
+        cursor.execute("SELECT * FROM users ORDER BY Id DESC;")
+
+        user_id = cursor.fetchall()[0]           
+        user_id = user_id['Id'] 
+
+        print(user_id)
+
+
+        cursor.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (user_id, 825, 100000))
+
+        
+        mysql.connection.commit()
+
         # Close connection
         cursor.close()
         flash("SIGNED UP SUCCESSFULLY!!!")
@@ -392,8 +405,7 @@ def signin():
         if user:
             if user['PasswordHash'] == hashlib.md5(password.encode()).hexdigest():  # Check if passwords match
                 # Store user information in session
-                session['user_id'] = user['Id']
-                session['username'] = user['UserName']
+
                 update_session_user_id(user['Id'])
 
                 return redirect("/main")
