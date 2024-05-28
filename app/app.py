@@ -121,27 +121,29 @@ def sell(crypto_id):
     wallet = cur.fetchall()
     cur.close()
 
-    tether_amount = 0
-    is_new_crypto = True
+    current_crypto_amount = 0
+    is_new_tether = True
 
 
     for crypto_data in wallet:
         # Check if CryptoId is 825
-        if crypto_data['CryptoId'] == 825:
+        if int(crypto_data['CryptoId']) == int(crypto_id):
             # Extract the amount
-            tether_amount = crypto_data['Amount']
+            current_crypto_amount = crypto_data['Amount']
             break  # Stop iterating once found
+    print(wallet)
+    print(current_crypto_amount)
 
     for crypto_data in wallet:
-        if int(crypto_data['CryptoId']) == int(crypto_id):
-            is_new_crypto = False
+        if int(crypto_data['CryptoId']) == 825:
+            is_new_tether = False
             break  # Stop iterating once found
 
   
     
-    amount = float(request.form.get('buyamount')) # Retrieving amount from form data
+    amount = float(request.form.get('sellamount')) # Retrieving amount from form data
 
-    tether_amount = float(tether_amount)
+    current_crypto_amount = float(current_crypto_amount)
 
     response = requests.get(url, headers=headers, params=params)
 
@@ -152,17 +154,17 @@ def sell(crypto_id):
 
 
 
-    if amount*crypto_price <= tether_amount:
-        tether_amount = tether_amount - amount*crypto_price
+    if amount <= current_crypto_amount:
+        current_crypto_amount = current_crypto_amount - amount
 
         
         cur = mysql.connection.cursor()
-        cur.execute("UPDATE assets SET Amount = %s WHERE UserId = %s AND CryptoId = %s", (tether_amount, session_user_id, 825))
+        cur.execute("UPDATE assets SET Amount = %s WHERE UserId = %s AND CryptoId = %s", (current_crypto_amount, session_user_id, crypto_id))
 
-        if is_new_crypto:
-            cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (session_user_id, crypto_id, amount))
+        if is_new_tether:
+            cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (session_user_id, 825, amount*crypto_price))
         else:
-            cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
+            cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (crypto_price, session_user_id, 825))
             
         mysql.connection.commit()
         cur.close()
@@ -171,7 +173,7 @@ def sell(crypto_id):
         return redirect(url_for('sellbuy', crypto_id=crypto_id))
     else:
         error = "Error."
-        flash("ACTION NOT COMPLETED! YOU DON'T HAVE ENOUGH TETHER", "error")
+        flash("ACTION NOT COMPLETED! YOU DON'T HAVE ENOUGH CRYPTO", "error")
         return redirect(url_for('sellbuy', crypto_id=crypto_id))
         
 
