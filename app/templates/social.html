@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeForge - Cryptocurrency Exchange</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="static/js/script.js"></script>
+    <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
+    <style>
+        header, footer {
+            background-color: #40E0D0;
+            color: white;
+            padding: 10px 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        .tab {
+            cursor: pointer;
+            padding: 15px 30px;
+            margin: 0 5px;
+            background-color: #eee;
+            display: inline-block;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+
+        .tab.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 15px;
+            background-color: #F1EFEF;
+        }
+
+        .large-input {
+            width: 200px; /* Adjust the width as needed */
+            font-size: 1em; 
+            padding: 5px; 
+            border-radius: 4px;
+
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="container" style="margin-left: 0;">
+            <h1>TradeForge</h1>
+            <ul>
+                <li><a href="/main">Home</a></li>
+                <li><a href="/market">Market</a></li>
+                <li><a href="/wallet">Wallet</a></li>
+                <li><a href="/history">History</a></li>
+                <li><a href="/socialtrading">Social Trading</a></li>
+                <li style="position: absolute; right: 10px;"><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+
+<div class="container">
+    <h2>Form</h2>
+    <form action="/send" method="post">
+        <label for="social_id">Social Id:</label>
+        <input type="text" id="social_id" name="social_id" required>
+        <br><br>
+        
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <br><br>
+        
+        <label for="crypto_id">Choose a Crypto:</label>
+        <select id="crypto_id" name="crypto_id" required>
+            <option value="" disabled selected>Please Select...</option>
+            {% for crypto in cryptos %}
+                <option value="{{ crypto.CryptoId }}">{{ crypto.Name }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        
+        <button type="submit" class="btn">Submit</button>
+    </form>
+</div>
+
+    
+    
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<p style="text-align: center;">{{message}}</p>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+
+<footer>
+    <div class="container">
+        <p>&copy; 2024 TradeForge. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
+a

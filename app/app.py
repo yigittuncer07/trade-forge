@@ -49,11 +49,88 @@ def main():
     cur = mysql.connection.cursor()
     cur.execute("SELECT COUNT(*) FROM users")
     result = cur.fetchone()  # Fetch the first (and only) value from the result
-    print(result)
     count = result['COUNT(*)']
     cur.close()
     return render_template('main.html', user_count=count)
     
+@app.route('/socialtrading')
+def socialtrading(): 
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT Cryptos.Name,Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID Where Assets.UserId = %s", (session_user_id,))
+    cryptos = cur.fetchall()
+    cur.close()
+
+    return render_template('social.html', cryptos = cryptos)
+
+@app.route('/send', methods=['GET', 'POST'])
+def send(): 
+    social_id = request.form.get('social_id')
+    amount = float(request.form.get('amount'))
+    crypto_id = int(request.form.get('crypto_id'))
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Users WHERE SocialId = %s;",(social_id,))
+    users = cur.fetchall()
+    cur.close()
+
+    if users:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
+        wallet = cur.fetchall()
+
+        current_crypto_amount = 0
+        for crypto_data in wallet:
+            # Check if CryptoId is 825
+            if crypto_data['CryptoId'] == crypto_id:
+                # Extract the amount
+                current_crypto_amount = crypto_data['Amount']
+                break  # Stop iterating once found
+
+
+        if (current_crypto_amount>amount):
+            cur.execute("UPDATE assets SET Amount = Amount - %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
+
+            cur.execute("SELECT Id FROM Users WHERE SocialId = %s", (social_id,))
+            user_id = cur.fetchone()           
+            user_id = user_id['Id'] 
+            cur.execute("SELECT * FROM assets WHERE UserId = %s", (user_id,))
+            user_assets = cur.fetchall()
+
+            is_new_crypto = True
+
+            for crypto_data in user_assets:
+                if int(crypto_data['CryptoId']) == int(crypto_id):
+                    is_new_crypto = False
+                    break  # Stop iterating once found
+
+            if is_new_crypto:
+                cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (user_id, crypto_id, amount))
+                mysql.connection.commit()
+
+                error = "Successfull."
+                flash("ACTION COMPLETED!", "Successfull")
+                return redirect(url_for('socialtrading'))
+            
+            else:
+                cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, user_id, crypto_id))
+                mysql.connection.commit()
+                error = "Successfull."
+                flash("ACTION COMPLETED", "Successfull")
+                return redirect(url_for('socialtrading'))
+            cur.close()
+
+        else:
+            error = "Error."
+            flash("YOU DON'T HAVE ENOUGH CRYPTO!", "error")
+            return redirect(url_for('socialtrading'))
+
+
+    else:
+        error = "Error."
+        flash("SOCIAL ID NOT FOUND!", "error")
+        return redirect(url_for('socialtrading'))
+
+    cur.close()
 @app.route('/history')
 def history(): 
     cur = mysql.connection.cursor()
@@ -61,7 +138,6 @@ def history():
     trans_history = cur.fetchall()
     cur.close()
 
-    
     return render_template('history.html', trans_history= trans_history)
 
 @app.route('/buy/<crypto_id>', methods=['GET', 'POST'])
