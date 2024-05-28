@@ -8,6 +8,15 @@
     <script src="static/js/scipt.js"></script>
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
 
         header, footer {
             background-color: #40E0D0;
@@ -22,21 +31,37 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-left: 100px;
+            /* Remove margin-left */
+            margin: 0px 0;
         }
+
         th, td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        .livecoinwatch-widget-5 {
+            position: absolute;
+            bottom: 20px;
+        }
     </style>
+    <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
 </head>
-
 <body>
-
     <header>
         <nav>
             <div class="container" style="margin-left: 0;">
@@ -45,17 +70,11 @@
                     <li><a href="/main">Home</a></li>
                     <li><a href="/market">Market</a></li>
                     <li><a href="/wallet">Wallet</a></li>
-
                     <li style="position: absolute; right: 10px;"><a href="/logout">Logout</a></li>
                 </ul>
             </div>
         </nav>
     </header>
-
-    <p style="margin: 50px; font-size: xx-large; font-weight: bold;">Your Crypto Assets: </p>  
-
-
-
 
     <table>
         <thead>
@@ -76,8 +95,9 @@
         </tbody>
     </table>
 
-    <p style="margin-top: 50px; margin-left: 70%; font-size: x-large; font-weight: bold;">Total Wallet Value: {{ total_wallet_value | round(4) }} $ </p>  
+    <p style="margin-top: 50px; margin-left: 70%; font-size: x-large; font-weight: bold;">Total Balance: {{ total_wallet_value | round(4) }} $</p>
 
+    <div class="livecoinwatch-widget-5" lcw-base="USD" lcw-color-tx="#7bdcb5" lcw-marquee-1="coins" lcw-marquee-2="coins" lcw-marquee-items="30"></div>
 
     <footer>
         <div class="container">

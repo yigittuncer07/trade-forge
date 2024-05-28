@@ -8,6 +8,37 @@
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <script src="static/js/scipt.js"></script>
     <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #money-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .money {
+            position: absolute;
+            font-size: 24px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
         header, footer {
             background-color: #40E0D0;
             color: white;
@@ -17,10 +48,17 @@
         h1 {
             margin-bottom: 20px;
         }
+
+        .hero {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 
 <body>
+
+<div id="money-container"></div>
 
 <header>
     <nav>
@@ -49,6 +87,27 @@
         <p>&copy; 2024 TradeForge. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("money-container");
+        const emojis = ["💸", "💰", "🥇"];
+        const emojiCount = 70;
+
+        for (let i = 0; i < emojiCount; i++) {
+            const emoji = document.createElement("div");
+            emoji.className = "money";
+            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+
+            emoji.style.left = `${Math.random() * 100}vw`;
+            emoji.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            emoji.style.fontSize = `${Math.random() * 20 + 20}px`;
+            emoji.style.animationDelay = `${Math.random() * 5}s`;
+
+            container.appendChild(emoji);
+        }
+    });
+</script>
 
 </body>
 </html>
