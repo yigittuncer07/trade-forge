@@ -25,7 +25,7 @@ headers = {
 response = requests.get(url, params=params, headers=headers)
 
 app = Flask(__name__, static_url_path='/static')
-session_user_id = 0
+global session_user_id 
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
