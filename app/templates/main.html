@@ -152,7 +152,7 @@
 
     <div class="content-container">
         <div class="user-count" id="userCount">
-            <div class="number">113</div>
+            <div class="number">{{user_count}}</div>
             <div>USERS</div>
             <div>TRUST US</div>
         </div>
@@ -168,15 +168,7 @@
         </div>
     </div>
 
-    <script>
-        let userCount = 113;
-        setInterval(() => {
-            let increment = Math.floor(Math.random() * 2) + 1;
-            userCount += increment;
-            document.getElementById('userCount').children[0].innerText = userCount;
-        }, 20000);
-    </script>
-
+    
     <div class="faq-section">
         <h2>Frequently Asked Questions</h2>
         <div class="faq-item">

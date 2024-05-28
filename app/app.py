@@ -46,7 +46,13 @@ def main_page():
 
 @app.route('/main')
 def main():
-    return render_template('main.html')
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT COUNT(*) FROM users")
+    result = cur.fetchone()  # Fetch the first (and only) value from the result
+    print(result)
+    count = result['COUNT(*)']
+    cur.close()
+    return render_template('main.html', user_count=count)
     
 @app.route('/test')
 def test():
