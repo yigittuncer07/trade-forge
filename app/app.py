@@ -5,7 +5,7 @@ import random
 import string
 import requests
 from decimal import Decimal
-
+from datetime import datetime
 
 cryptocurrency_ids = [328, 1, 1027,825,994]
 API_KEY = '6db83039-54e6-48c2-986d-681f46586926'
@@ -54,9 +54,15 @@ def main():
     cur.close()
     return render_template('main.html', user_count=count)
     
-@app.route('/test')
-def test():
-    return render_template('test.html')
+@app.route('/history')
+def history(): 
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT u.UserName, c.Name AS CryptoName, th.Amount, th.TransDate, th.TransType FROM transhistory th JOIN users u ON th.UserId = u.Id JOIN cryptos c ON th.CryptoId = c.Id WHERE th.UserId = %s ORDER BY th.TransDate DESC;",(session_user_id,))
+    trans_history = cur.fetchall()
+    cur.close()
+
+    
+    return render_template('history.html', trans_history= trans_history)
 
 @app.route('/buy/<crypto_id>', methods=['GET', 'POST'])
 def buy(crypto_id):
@@ -107,6 +113,9 @@ def buy(crypto_id):
             cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (session_user_id, crypto_id, amount))
         else:
             cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
+
+        cur.execute("INSERT INTO transhistory (UserId, CryptoId, Amount, TransDate, TransType) VALUES (%s, %s, %s, NOW(), 'BUY');", (session_user_id, crypto_id, amount))
+        
             
         mysql.connection.commit()
         cur.close()
@@ -137,8 +146,6 @@ def sell(crypto_id):
             # Extract the amount
             current_crypto_amount = crypto_data['Amount']
             break  # Stop iterating once found
-    print(wallet)
-    print(current_crypto_amount)
 
     for crypto_data in wallet:
         if int(crypto_data['CryptoId']) == 825:
@@ -171,6 +178,9 @@ def sell(crypto_id):
             cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (session_user_id, 825, amount*crypto_price))
         else:
             cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (crypto_price, session_user_id, 825))
+
+        cur.execute("INSERT INTO transhistory (UserId, CryptoId, Amount, TransDate, TransType) VALUES (%s, %s, %s, NOW(), 'SELL');", (session_user_id, crypto_id, amount))
+
             
         mysql.connection.commit()
         cur.close()

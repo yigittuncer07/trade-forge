@@ -31,6 +31,17 @@ CREATE TABLE assets (
     FOREIGN KEY (CryptoId) REFERENCES cryptos(Id)
 );
 
+CREATE TABLE transhistory (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT,
+    CryptoId INT,
+    Amount DECIMAL(18, 8),
+    TransDate DATETIME,
+    TransType VARCHAR(4),
+    FOREIGN KEY (UserId) REFERENCES users(Id),
+    FOREIGN KEY (CryptoId) REFERENCES cryptos(Id)
+);
+
 
 INSERT INTO assets (UserId, CryptoId, Amount) VALUES (22, 1, 12.5);
 INSERT INTO assets (UserId, CryptoId, Amount) VALUES (22, 1027, 50);
