@@ -114,14 +114,66 @@ def buy(crypto_id):
         
     
 
+@app.route('/sell/<crypto_id>', methods=['GET', 'POST'])
+def sell(crypto_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT Cryptos.Name, Assets.Amount, Assets.CryptoId FROM Assets JOIN Cryptos ON Assets.CryptoId = Cryptos.ID WHERE Assets.UserId = %s",(session_user_id,))
+    wallet = cur.fetchall()
+    cur.close()
+
+    tether_amount = 0
+    is_new_crypto = True
 
 
-                
+    for crypto_data in wallet:
+        # Check if CryptoId is 825
+        if crypto_data['CryptoId'] == 825:
+            # Extract the amount
+            tether_amount = crypto_data['Amount']
+            break  # Stop iterating once found
+
+    for crypto_data in wallet:
+        if int(crypto_data['CryptoId']) == int(crypto_id):
+            is_new_crypto = False
+            break  # Stop iterating once found
 
   
     
+    amount = float(request.form.get('buyamount')) # Retrieving amount from form data
+
+    tether_amount = float(tether_amount)
+
+    response = requests.get(url, headers=headers, params=params)
+
+    data = response.json()
+
+    crypto_data = data['data'][str(crypto_id)]
+    crypto_price = float(crypto_data['quote']['USD']['price'])
 
 
+
+    if amount*crypto_price <= tether_amount:
+        tether_amount = tether_amount - amount*crypto_price
+
+        
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE assets SET Amount = %s WHERE UserId = %s AND CryptoId = %s", (tether_amount, session_user_id, 825))
+
+        if is_new_crypto:
+            cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (session_user_id, crypto_id, amount))
+        else:
+            cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, session_user_id, crypto_id))
+            
+        mysql.connection.commit()
+        cur.close()
+        error = "Successful."
+        flash("ACTION COMPLETED!", "success")
+        return redirect(url_for('sellbuy', crypto_id=crypto_id))
+    else:
+        error = "Error."
+        flash("ACTION NOT COMPLETED! YOU DON'T HAVE ENOUGH TETHER", "error")
+        return redirect(url_for('sellbuy', crypto_id=crypto_id))
+        
 
 @app.route('/wallet')
 def wallet():
