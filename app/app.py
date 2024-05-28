@@ -105,6 +105,8 @@ def send():
 
             if is_new_crypto:
                 cur.execute("INSERT INTO assets (UserId, CryptoId, Amount) VALUES (%s, %s, %s);", (user_id, crypto_id, amount))
+                cur.execute("INSERT INTO transhistory (UserId, CryptoId, Amount, TransDate, TransType) VALUES (%s, %s, %s, NOW(), 'SENT');", (session_user_id, crypto_id, amount))
+
                 mysql.connection.commit()
 
                 error = "Successfull."
@@ -113,6 +115,8 @@ def send():
             
             else:
                 cur.execute("UPDATE assets SET Amount = Amount + %s WHERE UserId = %s AND CryptoId = %s", (amount, user_id, crypto_id))
+                cur.execute("INSERT INTO transhistory (UserId, CryptoId, Amount, TransDate, TransType) VALUES (%s, %s, %s, NOW(), 'SENT');", (session_user_id, crypto_id, amount))
+
                 mysql.connection.commit()
                 error = "Successfull."
                 flash("ACTION COMPLETED", "Successfull")
