@@ -15,11 +15,13 @@ use tradeforge;
 CREATE TABLE cryptos (
     Id INT PRIMARY KEY,
     Name VARCHAR(255),
-    Code VARCHAR(255)
+    Code VARCHAR(255),
+    ChartCode VARCHAR(255)
+
 );
-INSERT INTO cryptos (Id, Name, Code) VALUES (1, 'Bitcoin', 'BTC');
-INSERT INTO cryptos (Id, Name, Code) VALUES (1027, 'Ethereum', 'ETH');
-INSERT INTO cryptos (Id, Name, Code) VALUES (328, 'Monero', 'XMR');
+INSERT INTO cryptos (Id, Name, Code) VALUES (1, 'Bitcoin', 'BTC','BINANCE:BTCUSDT');
+INSERT INTO cryptos (Id, Name, Code) VALUES (1027, 'Ethereum', 'ETH','BINANCE:ETHUSDT');
+INSERT INTO cryptos (Id, Name, Code) VALUES (328, 'Monero', 'XMR','BINANCE:XMRUSDT.P');
 
 
 CREATE TABLE assets (
