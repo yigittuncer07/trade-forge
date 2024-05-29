@@ -8,17 +8,14 @@
     <script src="static/js/scipt.js"></script>
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <style>
-
         header, footer {
             background-color: #40E0D0;
             color: white;
             padding: 10px 0;
         }
-
         h1 {
             margin-bottom: 20px;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -38,12 +35,9 @@
         .tradingview-widget-container {
             width: 100%;
         }
-
     </style>
 </head>
-
 <body>
-
 <header>
     <nav>
         <div class="container" style="margin-left: 0;">
@@ -59,17 +53,14 @@
         </div>
     </nav>
 </header>
-
-
-
 <table>
     <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Price</th>
-            <th> </th>
-            <th> </th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -77,48 +68,57 @@
         <tr class="collapsible">
             <td>{{ crypto.Id }}</td>
             <td>{{ crypto.Name }}</td>
-            <td>{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price']  | round(4) }}  $</td>
+            <td data-price="{{ data['data']["%s" % (crypto.Id,)]['quote']['USD']['price'] | round(4) }}"></td>
             <td><a href="/sellbuy{{crypto.Id}}"><button class="btn" onclick="event.stopPropagation();">Buy/Sell</button></a></td>
-            <td> <b> ▼</b> </td>
+            <td><b>▼</b></td>
         </tr>
         <tr class="content">
             <td colspan="5">
-                 <!-- TradingView Widget BEGIN -->
-    <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <div class="tradingview-widget-copyright">
-            <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-            </a>
-        </div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-        {
-            "width": "100%",
-            "height": "400",
-            "symbol": "{{ crypto.ChartCode }}",
-            "interval": "D",
-            "timezone": "Etc/UTC",
-            "theme": "dark",
-            "style": "1",
-            "locale": "en",
-            "allow_symbol_change": true,
-            "calendar": false,
-            "support_host": "https://www.tradingview.com"
-        }
-        </script>
-    </div>
-    <!-- TradingView Widget END -->    
-            
+                <!-- TradingView Widget BEGIN -->
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <div class="tradingview-widget-copyright">
+                        <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"></a>
+                    </div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+                    {
+                        "width": "100%",
+                        "height": "400",
+                        "symbol": "{{ crypto.ChartCode }}",
+                        "interval": "D",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "en",
+                        "allow_symbol_change": true,
+                        "calendar": false,
+                        "support_host": "https://www.tradingview.com"
+                    }
+                    </script>
+                </div>
+                <!-- TradingView Widget END -->
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-
 <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
+    // Function to format numbers with dots every three digits
+    function formatNumber(number) {
+        return number.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    }
 
-    for (i = 0; i < coll.length; i++) {
+    // Format all price cells
+    document.addEventListener('DOMContentLoaded', function() {
+        var priceCells = document.querySelectorAll('td[data-price]');
+        priceCells.forEach(function(cell) {
+            var price = parseFloat(cell.getAttribute('data-price'));
+            cell.textContent = formatNumber(price) + ' $';
+        });
+    });
+
+    var coll = document.getElementsByClassName("collapsible");
+    for (var i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
             var content = this.nextElementSibling;
@@ -130,7 +130,6 @@
         });
     }
 </script>
-
 <footer>
     <div class="container">
         <p>&copy; 2024 TradeForge. All rights reserved.</p>

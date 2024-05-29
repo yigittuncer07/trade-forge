@@ -8,10 +8,14 @@
     <script src="static/js/script.js"></script>
     <link rel="icon" type="image/jpg" href="{{ url_for('static', filename='logo.jpg') }}">
     <style>
+        body, html {
+            overflow: hidden; /* Hide the scrollbar */
+        }
+
         header, footer {
             background-color: #40E0D0;
             color: white;
-            padding: 10px 0;
+            padding: 10px 0; /* Adjust this padding as needed */
         }
 
         h1 {
@@ -41,7 +45,7 @@
 
         .tab-content {
             display: none;
-            padding: 20px;
+            margin-top: 20px;
             border: 1px solid #ddd;
             border-top: none;
             border-radius: 15px;
@@ -49,11 +53,55 @@
         }
 
         .large-input {
-            width: 200px; /* Adjust the width as needed */
+            width: 200px;
             font-size: 1em; 
             padding: 5px; 
             border-radius: 4px;
+        }
 
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .form-box {
+            background-color:#F1EFEF; 
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-box h2 {
+            text-align: center;
+        }
+
+        .form-box label,
+        .form-box input,
+        .form-box select,
+        .form-box button {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .form-box button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        footer {
+            padding: 0; /* Reduced padding */
+            text-align: center; /* Center text if not already */
+        }
+
+        footer .container p {
+            margin: 0; /* Remove default margin from the paragraph */
         }
     </style>
 </head>
@@ -76,33 +124,28 @@
     </nav>
 </header>
 
-
-<div class="container">
-    <h2>Form</h2>
-    <form action="/send" method="post">
-        <label for="social_id">Social Id:</label>
-        <input type="text" id="social_id" name="social_id" required>
-        <br><br>
-        
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" step="any" name="amount" required>
-        <br><br>
-        
-        <label for="crypto_id">Choose a Crypto:</label>
-        <select id="crypto_id" name="crypto_id" required>
-            <option value="" disabled selected>Please Select...</option>
-            {% for crypto in cryptos %}
-                <option value="{{ crypto.CryptoId }}">{{ crypto.Name }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        
-        <button type="submit" class="btn">Submit</button>
-    </form>
+<div class="form-container">
+    <div class="form-box">
+        <h2>Social Trade</h2>
+        <form action="/send" method="post">
+            <label for="social_id">Social Id:</label>
+            <input type="text" id="social_id" name="social_id" required class="large-input">
+            
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" step="any" name="amount" required class="large-input">
+            
+            <label for="crypto_id">Choose a Crypto:</label>
+            <select id="crypto_id" name="crypto_id" required class="large-input">
+                <option value="" disabled selected>Please Select...</option>
+                {% for crypto in cryptos %}
+                    <option value="{{ crypto.CryptoId }}">{{ crypto.Name }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit" class="btn">Submit</button>
+        </form>
+    </div>
 </div>
-
-    
-    
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -112,7 +155,6 @@
 {% endif %}
 {% endwith %}
 
-
 <footer>
     <div class="container">
         <p>&copy; 2024 TradeForge. All rights reserved.</p>
@@ -120,4 +162,3 @@
 </footer>
 </body>
 </html>
-a
